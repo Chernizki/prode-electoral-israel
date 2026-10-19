@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PRODE Electoral Israel 2026 · Ojos Sionistas</title>
+<style>
+:root{font-family:system-ui,Arial;background:#091725;color:#eef4fa}*{box-sizing:border-box}body{margin:0}main{max-width:800px;margin:auto;padding:20px}h1{margin-bottom:4px}p{color:#bbccda}.panel{background:#142b3e;border:1px solid #345066;border-radius:14px;padding:16px;margin:14px 0}.party{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;border-bottom:1px solid #345066;padding:13px 0}.party:last-child{border:0}.he{color:#a8c2d5;direction:rtl;font-size:.9rem}.leader{font-size:.82rem;color:#a9bbc9}.counter{position:sticky;top:0;background:#113b57;padding:14px;border-radius:12px;display:flex;justify-content:space-between;gap:10px;z-index:2;flex-wrap:wrap}.controls{display:flex;align-items:center;gap:8px}.controls button{width:36px;height:36px}.controls input{width:55px;text-align:center}button,input,select{font:inherit;border-radius:8px;padding:9px;border:1px solid #557085}button{background:#2875a2;color:white;cursor:pointer}button:disabled{opacity:.35;cursor:not-allowed}input,select{background:#f7fbff;color:#102438}label{display:block;margin:10px 0}label input,label select{display:block;width:100%;margin-top:5px}.primary{width:100%;padding:14px;background:#36a0cf;font-weight:700}.hint{font-size:.85rem}#notice{color:#ffdb8b;white-space:pre-wrap}a{color:#9fd9fa}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#eef4fa;width:max-content;margin-bottom:18px}.brandmark{display:grid;place-items:center;width:49px;height:49px;border:1px solid #75b9e2;border-radius:12px;font-weight:900;letter-spacing:-2px;font-size:23px;color:white;background:#102d44}.brandname{font-size:13px;letter-spacing:1.3px;font-weight:800}.brandhint{font-size:11px;color:#9fc4df}.brandfooter{text-align:center;margin:28px 0 10px;color:#b7cada;font-size:13px}.brandfooter a{color:#9fd9fa}
+</style>
+</head>
+<body><main>
+<a class="brand" href="https://www.instagram.com/ojossionistas/" target="_blank" rel="noopener noreferrer" aria-label="Visitar Instagram de Ojos Sionistas"><span class="brandmark">OS</span><span><span class="brandname">OJOS SIONISTAS</span><br><span class="brandhint">Seguinos en Instagram ↗</span></span></a>
+<h1>PRODE Electoral Israel 2026</h1>
+<p>¿Cómo quedará la próxima Knesset? Repartí las 120 bancas y elegí al próximo primer ministro.</p>
+<div class="counter"><strong>Bancas asignadas: <span id="total">0</span> / 120</strong><strong id="remaining">Faltan 120</strong></div>
+<section class="panel"><h2>Tu pronóstico</h2><div id="parties"></div></section>
+<section class="panel"><h2>¿Quién será el próximo primer ministro?</h2><label>Elegí una persona<select id="pm"><option value="">Seleccionar...</option></select></label><p class="hint">Acertar el primer ministro suma 20 puntos. Cada banca acertada suma 1 punto.</p></section>
+<section class="panel"><h2>Tus datos</h2><label>Nombre o apodo público<input id="nickname" maxlength="40" autocomplete="nickname" placeholder="Cómo querés aparecer en el ranking"></label><label>Correo electrónico privado<input id="email" type="email" maxlength="254" autocomplete="email" placeholder="tu@email.com"></label><button id="submit" class="primary" disabled>Guardar pronóstico</button><p id="notice" role="status"></p><p class="hint">No se verifica el correo electrónico. Usá una dirección propia: cada correo puede inscribirse una sola vez. El correo y el pronóstico no se mostrarán públicamente.</p></section>
+<section class="panel"><h2>Ranking</h2><p>Se publicará después de las elecciones, primero provisional y luego definitivo. No se mostrarán los pronósticos individuales.</p></section>
+<footer class="brandfooter">Una iniciativa de <a href="https://www.instagram.com/ojossionistas/" target="_blank" rel="noopener noreferrer">Ojos Sionistas · @ojossionistas ↗</a></footer>
+</main><script>
+'use strict';
+// Clave pública: nunca incorporar una service_role key en este archivo.
+const FUNCTION_URL='https://cnwnnmksspyxkgqlhzmh.supabase.co/functions/v1/guardar-pronostico';
+const PUBLISHABLE_KEY='sb_publishable_ZEgFLPIwBtVj-lu8QjS3bw_U8Hzmm7P';
+const parties=[['Likud','הליכוד','Benjamin Netanyahu'],['Yashar','ישר','Gadi Eisenkot'],['Beyajad','ביחד','Naftali Bennett'],['Los Demócratas','הדמוקרטים','Yair Golan'],['Israel Beitenu','ישראל ביתנו','Avigdor Lieberman'],['Otzmá Yehudit','עוצמה יהודית','Itamar Ben Gvir'],['Shas','ש״ס','Aryeh Deri'],['Judaísmo Unido de la Torá','יהדות התורה','Yaakov Asher'],['Sionismo Religioso–Zehut','הציונות הדתית וזהות','Bezalel Smotrich'],['Lista Conjunta','הרשימה המשותפת','Yousef Jabareen'],['Ra’am','רע״ם','Mansour Abbas'],['Reservistas–Nueva Economía','המילואימניקים והכלכלית','Yoaz Hendel / Yaron Zelikha'],['Amjá Israel','עמך ישראל','Ofer Winter'],['Azul y Blanco','כחול לבן','Benny Gantz'],['Público Haredí','הציבור החרדי','Moti Leitner']];
+let seats=parties.map(()=>0);
+const wrap=document.getElementById('parties');
+parties.forEach((p,i)=>{const r=document.createElement('div');r.className='party';r.innerHTML=`<div><strong>${p[0]}</strong><div class="he">${p[1]}</div><div class="leader">${p[2]}</div></div><div class="controls"><button type="button" aria-label="Restar banca">−</button><input type="number" min="0" max="120" aria-label="Bancas para ${p[0]}" value="0"><button type="button" aria-label="Sumar banca">+</button></div>`;const [minus,plus]=r.querySelectorAll('button'),input=r.querySelector('input');function set(n){const other=seats.reduce((a,b)=>a+b,0)-seats[i];seats[i]=Math.min(120-other,Math.max(0,Number.isFinite(n)?Math.floor(n):0));update()}minus.onclick=()=>set(seats[i]-1);plus.onclick=()=>set(seats[i]+1);input.onchange=()=>set(Number(input.value));wrap.append(r)});
+const pm=document.getElementById('pm');[...new Set(parties.flatMap(p=>p[2].split(' / ')))].forEach(name=>{const opt=document.createElement('option');opt.value=name;opt.textContent=name;pm.append(opt)});
+const submit=document.getElementById('submit'),notice=document.getElementById('notice');let sending=false;
+function update(){const sum=seats.reduce((a,b)=>a+b,0);document.getElementById('total').textContent=sum;document.getElementById('remaining').textContent=sum===120?'¡Listo!':`Faltan ${120-sum}`;document.querySelectorAll('.party input').forEach((el,i)=>el.value=seats[i]);submit.disabled=sending||sum!==120}
+update();
+submit.onclick=async()=>{
+ const apodo=document.getElementById('nickname').value.trim(),emailField=document.getElementById('email'),email=emailField.value.trim();
+ if(apodo.length<2||apodo.length>40||!emailField.checkValidity()||!email||!pm.value){notice.textContent='Completá un apodo de 2 a 40 caracteres, un correo válido y el primer ministro.';return}
+ if(seats.reduce((a,b)=>a+b,0)!==120){notice.textContent='Las bancas deben sumar 120.';return}
+ sending=true;update();notice.textContent='Enviando pronóstico…';
+ try{
+  const pronostico=Object.fromEntries(seats.map((n,i)=>[String(i+1),n]));
+  const response=await fetch(FUNCTION_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':PUBLISHABLE_KEY,'Authorization':'Bearer '+PUBLISHABLE_KEY},body:JSON.stringify({apodo,email,pronostico,primer_ministro:pm.value})});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok){notice.textContent='No se pudo registrar el pronóstico. '+(result.mensaje||'Revisá los datos e intentá nuevamente.')+(response.status===409?' Este correo ya está registrado.':'');return}
+  notice.textContent='¡Pronóstico registrado correctamente! Guardá este mensaje como comprobante.';
+  submit.textContent='Pronóstico enviado';submit.onclick=null;
+ }catch(error){notice.textContent='No se pudo conectar con el servidor. Revisá tu conexión e intentá nuevamente.'}
+ finally{sending=false;update();if(submit.textContent==='Pronóstico enviado')submit.disabled=true}
+};
+</script></body></html>
